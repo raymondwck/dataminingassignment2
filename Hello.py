@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit.logger import get_logger
-from function import oneR_predict
+from diabetesFunction import oneR_predict
 
 LOGGER = get_logger(__name__)
 
