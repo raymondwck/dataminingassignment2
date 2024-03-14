@@ -5,10 +5,8 @@
 
 
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
-from matplotlib.colors import LinearSegmentedColormap
+from sklearn import ensemble
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
@@ -21,7 +19,7 @@ from sklearn.metrics import roc_curve, auc
 # In[2]:
 
 
-quality = pd.read_csv("C:/Users/Ck/Desktop/Study/2024 Jan Sesmester/Data Mining/Assignment 2 group/apple_quality.csv")
+quality = pd.read_csv("apple_quality.csv")
 
 
 # In[3]:
@@ -95,57 +93,6 @@ quality.duplicated().sum()
 # In[12]:
 
 
-# For viz: Ratio of Movies & TV shows
-x=quality.groupby(['Quality'])['Quality'].count()
-y=len(quality)
-r=((x/y)).round(2)
-
-mf_ratio = pd.DataFrame(r).T
-
-
-# In[13]:
-
-
-fig, ax = plt.subplots(1,1,figsize=(6.5, 2.5))
-
-ax.barh(mf_ratio.index, mf_ratio['good'], 
-        color='#b20710', alpha=0.9, label='Male')
-ax.barh(mf_ratio.index, mf_ratio['bad'], left=mf_ratio['good'], 
-        color='green', alpha=0.9, label='Female')
-
-ax.set_xlim(0, 1)
-ax.set_xticks([])
-ax.set_yticks([])
-
-for i in mf_ratio.index:
-    ax.annotate(f"{int(mf_ratio['good'][i]*100)}%", 
-                   xy=(mf_ratio['good'][i]/2, i),
-                   va = 'center', ha='center',fontsize=40, fontweight='light', fontfamily='serif',
-                   color='white')
-
-    ax.annotate("Good", 
-                   xy=(mf_ratio['good'][i]/2, -0.25),
-                   va = 'center', ha='center',fontsize=15, fontweight='light', fontfamily='serif',
-                   color='white')
-    
-    
-for i in mf_ratio.index:
-    ax.annotate(f"{int(mf_ratio['bad'][i]*100)}%", 
-                   xy=(mf_ratio['bad'][i]+mf_ratio['bad'][i]/2, i),
-                   va = 'center', ha='center',fontsize=40, fontweight='light', fontfamily='serif',
-                   color='white')
-    ax.annotate("Bad", 
-                   xy=(mf_ratio['good'][i]+mf_ratio['bad'][i]/2, -0.25),
-                   va = 'center', ha='center',fontsize=15, fontweight='light', fontfamily='serif',
-                   color='white')
-
-for s in ['top', 'left', 'right', 'bottom']:
-    ax.spines[s].set_visible(False)
-
-ax.legend().set_visible(False)
-plt.show()
-
-
 # In[14]:
 
 
@@ -155,103 +102,6 @@ compare
 
 # In[15]:
 
-
-# Create a bar plot with green and red colors
-plt.bar(compare.index, compare, color=['green', 'red'])
-
-# Add labels and title
-plt.xlabel('Quality')
-plt.ylabel('Count')
-plt.title('Good & Bad bar')
-
-# Show the plot
-plt.show() 
-
-
-# ### Checking Outliners
-
-# In[16]:
-
-
-plt.boxplot(quality["Size"])
-
-# Add labels and title
-plt.xlabel('Size')
-plt.ylabel('Values')
-plt.title('Outliners for Size')
-
-# Show the plot
-plt.show()
-
-
-# In[17]:
-
-
-plt.boxplot(quality['Weight'])
-
-# Add labels and title
-plt.xlabel('Weight')
-plt.ylabel('Values')
-plt.title('Outliners for Weight')
-
-# Show the plot
-plt.show()
-
-
-# In[18]:
-
-
-plt.boxplot(quality['Sweetness'])
-
-# Add labels and title
-plt.xlabel('Sweetness')
-plt.ylabel('Values')
-plt.title('Outliners for Sweetness')
-
-# Show the plot
-plt.show()
-
-
-# In[19]:
-
-
-plt.boxplot(quality['Crunchiness'])
-
-# Add labels and title
-plt.xlabel('Crunchiness')
-plt.ylabel('Values')
-plt.title('Outliners for Crunchiness')
-
-# Show the plot
-plt.show()
-
-
-# In[20]:
-
-
-plt.boxplot(quality['Juiciness'])
-
-# Add labels and title
-plt.xlabel('Juiciness')
-plt.ylabel('Values')
-plt.title('Outliners for Juiciness')
-
-# Show the plot
-plt.show()
-
-
-# In[21]:
-
-
-plt.boxplot(quality['Ripeness'])
-
-# Add labels and title
-plt.xlabel('Ripeness')
-plt.ylabel('Values')
-plt.title('Outliners for Ripeness')
-
-# Show the plot
-plt.show()
 
 
 # In[22]:
@@ -268,17 +118,6 @@ print(quality['Acidity'].isna().sum())
 
 
 # In[23]:
-
-
-plt.boxplot(quality['Acidity'])
-
-# Add labels and title
-plt.xlabel('Acidity')
-plt.ylabel('Values')
-plt.title('Outliners for Acidity')
-
-# Show the plot
-plt.show()
 
 
 # In[24]:
@@ -343,112 +182,10 @@ quality.info()
 # In[29]:
 
 
-# Create a box plot
-counter=quality.Size.value_counts()
-plt.boxplot(counter.index)
-
-# Add labels and title
-plt.xlabel('size')
-plt.ylabel('Values')
-plt.title('Removed Outliers for Size')
-
-# Show the plot
-plt.show()
-
-
-# In[30]:
-
-
-# Create a box plot
-counter=quality.Weight.value_counts()
-plt.boxplot(counter.index)
-       
-# Add labels and title
-plt.xlabel('Weight')
-plt.ylabel('Values')
-plt.title('Removed Outliers for Weight')
-       
-# Show the plot
-plt.show()
-
-
-# In[31]:
-
-
-counter=quality.Sweetness.value_counts()
-plt.boxplot(counter.index)
-        
-# Add labels and title
-plt.xlabel('Sweetness')
-plt.ylabel('Values')
-plt.title('Removed Outliers for Sweetness')
-        
-# Show the plot
-plt.show()
-
-
-# In[32]:
-
-
-# Create a box plot
-counter=quality.Crunchiness.value_counts()
-plt.boxplot(counter.index)
-       
-# Add labels and title
-plt.xlabel('Crunchiness')
-plt.ylabel('Values')
-plt.title('Removed Outliers for Crunchiness')
-       
-# Show the plot
-plt.show()
-
-
-# In[33]:
-
-
-# Create a box plot
-counter=quality.Juiciness.value_counts()
-plt.boxplot(counter.index)
-       
-# Add labels and title
-plt.xlabel('Juiciness')
-plt.ylabel('Values')
-plt.title('Removed Outliers for Juiciness')
-       
-# Show the plot
-plt.show()
-
 
 # In[34]:
 
 
-# Create a box plot
-counter=quality.Ripeness.value_counts()
-plt.boxplot(counter.index)
-       
-# Add labels and title
-plt.xlabel('Ripeness')
-plt.ylabel('Values')
-plt.title('Removed Outliers for Ripeness')
-       
-# Show the plot
-plt.show()
-
-
-# In[35]:
-
-
-# Create a box plot
-counter=quality.Acidity.value_counts()
-plt.boxplot(counter.index)
-       
-# Add labels and title
-plt.xlabel('Acidity')
-plt.ylabel('Values')
-plt.title('Removed Outliers for Acidity')
-       
-# Show the plot
-plt.show()
 
 
 # In[36]:
@@ -462,91 +199,9 @@ for feature in numerical_features :
 # In[37]:
 
 
-plt.hist(quality['Size'], bins=150, color='green', edgecolor='black',histtype='stepfilled')
-plt.xlabel('size values')
-plt.ylabel('Frequency')
-plt.title('size distribution')
-        
-# Show the plot
-plt.show()
-
-
 # In[38]:
 
 
-plt.hist(quality['Weight'], bins=150, color='green', edgecolor='black',histtype='stepfilled')
- # Add labels and title
-plt.xlabel('Weight values')
-plt.ylabel('Frequency')
-plt.title('Weight distribution')
-        
-# Show the plot
-plt.show()
-
-
-# In[39]:
-
-
-plt.hist(quality['Sweetness'], bins=150, color='green', edgecolor='black',histtype='stepfilled')
- # Add labels and title
-plt.xlabel('Sweetness values')
-plt.ylabel('Frequency')
-plt.title('Sweetness distribution')
-        
-# Show the plot
-plt.show()
-
-
-# In[40]:
-
-
-plt.hist(quality['Crunchiness'], bins=150, color='green', edgecolor='black',histtype='stepfilled')
- # Add labels and title
-plt.xlabel('Crunchiness values')
-plt.ylabel('Frequency')
-plt.title('Crunchiness distribution')
-        
-# Show the plot
-plt.show()
-
-
-# In[41]:
-
-
-plt.hist(quality['Juiciness'], bins=150, color='green', edgecolor='black',histtype='stepfilled')
- # Add labels and title
-plt.xlabel('Juiciness values')
-plt.ylabel('Frequency')
-plt.title('Juiciness distribution')
-        
-# Show the plot
-plt.show()
-
-
-# In[42]:
-
-
-plt.hist(quality['Ripeness'], bins=150, color='green', edgecolor='black',histtype='stepfilled')
- # Add labels and title
-plt.xlabel('Ripeness values')
-plt.ylabel('Frequency')
-plt.title('Ripeness distribution')
-        
-# Show the plot
-plt.show()
-
-
-# In[43]:
-
-
-plt.hist(quality['Acidity'], bins=150, color='green', edgecolor='black',histtype='stepfilled')
- # Add labels and title
-plt.xlabel('Acidity values')
-plt.ylabel('Frequency')
-plt.title('Acidity distribution')
-        
-# Show the plot
-plt.show()
 
 
 # In[44]:
@@ -572,17 +227,6 @@ correalation.corr()
 
 # In[47]:
 
-
-# Generate a custom colormap with red and green
-colors = [(0, 1, 0), (1, 0, 0)]  # Green to Red
-cmap = LinearSegmentedColormap.from_list("RedGreen", colors, N=256)
-
-# Compute correlation and create heatmap
-realtion = correalation.corr()
-plt.figure(figsize=(8, 6))
-sns.heatmap(realtion, annot=True, cmap=cmap, fmt=".2f", linewidths=.5)
-plt.title('Correlation Heatmap')
-plt.show()
 
 
 # # Modeling
